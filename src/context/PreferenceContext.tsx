@@ -28,6 +28,7 @@ export interface Preference {
     autoSwitchMediaPostType: boolean
     tutorialProgress: number
     tutorialCompleted: boolean
+    mutedUsers: string[]
 }
 
 export const defaultPreference: Preference = {
@@ -57,7 +58,8 @@ export const defaultPreference: Preference = {
     enableConcord: false,
     autoSwitchMediaPostType: true,
     tutorialProgress: 0,
-    tutorialCompleted: false
+    tutorialCompleted: false,
+    mutedUsers: []
 }
 
 interface PreferenceState {

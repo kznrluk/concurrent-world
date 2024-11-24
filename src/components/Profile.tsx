@@ -21,6 +21,7 @@ import { useMediaViewer } from '../context/MediaViewer'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import { CCIconButton } from './ui/CCIconButton'
 import ReplayIcon from '@mui/icons-material/Replay'
+import { usePreference } from '../context/PreferenceContext'
 
 export interface ProfileProps {
     user?: User
@@ -43,6 +44,8 @@ export function Profile(props: ProfileProps): JSX.Element {
     const [ackerUsers, setAckerUsers] = useState<User[] | undefined>(undefined)
 
     const [subProfile, setSubProfile] = useState<CoreProfile<any> | null>(null)
+
+    const [mutedUsers, setMutedUsers] = usePreference('mutedUsers')
 
     const { t } = useTranslation('', { keyPrefix: 'common' })
 
@@ -247,6 +250,32 @@ export function Profile(props: ProfileProps): JSX.Element {
                                     Edit Profile
                                 </Button>
                             )}
+                            {props.user &&
+                                !isSelf &&
+                                (mutedUsers?.includes(props.user.ccid) ? (
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() => {
+                                            if (!props.user) return
+                                            const newMutedUsers = mutedUsers.filter((ccid) => ccid !== props.user!.ccid)
+                                            setMutedUsers(newMutedUsers)
+                                            enqueueSnackbar('ミュートを解除しました', { variant: 'success' })
+                                        }}
+                                    >
+                                        Unmute
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        color="warning"
+                                        onClick={() => {
+                                            if (!props.user) return
+                                            setMutedUsers([...mutedUsers, props.user.ccid])
+                                            enqueueSnackbar('ミュートしました', { variant: 'success' })
+                                        }}
+                                    >
+                                        Mute
+                                    </Button>
+                                ))}
                         </Box>
                     )}
                 </Box>
